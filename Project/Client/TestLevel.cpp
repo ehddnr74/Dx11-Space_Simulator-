@@ -22,6 +22,14 @@
 #include <Script\DebugScript.h>
 #include <Script\AsteroidbeltScript.h>
 #include <Engine\CParticleSystem.h>
+#include <Script\MiniBossScript.h>
+
+#include <Script\HyperLoopScript.h>
+#include <Script\HyperLoopScript_Mars.h>
+#include <Script\HyperLoopScript_Jupiter.h>
+#include <Script\HyperLoopScript_Saturn.h>
+#include <Script\HyperLoopScript_Neptune.h>
+#include <Script\HyperLoopScript_Uranus.h>
 
 #include "CLevelSaveLoad.h"
 
@@ -37,7 +45,7 @@ void CreateTestLevel()
 
 	// Layer 이름설정
 	pCurLevel->GetLayer(0)->SetName(L"Default");
-	pCurLevel->GetLayer(1)->SetName(L"Tile");
+	pCurLevel->GetLayer(1)->SetName(L"MiniBoss");
 	pCurLevel->GetLayer(2)->SetName(L"Player");
 	pCurLevel->GetLayer(3)->SetName(L"Monster");
 	pCurLevel->GetLayer(4)->SetName(L"sun");
@@ -54,14 +62,19 @@ void CreateTestLevel()
 	pCurLevel->GetLayer(15)->SetName(L"08_Uranus");
 	pCurLevel->GetLayer(16)->SetName(L"08_UranusRing");
 	pCurLevel->GetLayer(17)->SetName(L"09_Neptune");
-	pCurLevel->GetLayer(18)->SetName(L"Hyperloop");
-	pCurLevel->GetLayer(19)->SetName(L"blackhole");
-	pCurLevel->GetLayer(21)->SetName(L"Sirius");
-	pCurLevel->GetLayer(22)->SetName(L"Volcanic");
-	pCurLevel->GetLayer(23)->SetName(L"Volcanic_Lava");
-	pCurLevel->GetLayer(24)->SetName(L"Nar_Shaddaa");
-	pCurLevel->GetLayer(25)->SetName(L"Meteo");
-	pCurLevel->GetLayer(26)->SetName(L"TargetAim");
+	pCurLevel->GetLayer(18)->SetName(L"HyperLoop_Moon");
+	pCurLevel->GetLayer(19)->SetName(L"HyperLoop_Mars");
+	pCurLevel->GetLayer(20)->SetName(L"HyperLoop_Jupiter");
+	pCurLevel->GetLayer(21)->SetName(L"HyperLoop_Saturn");
+	pCurLevel->GetLayer(22)->SetName(L"HyperLoop_Uranus");
+	pCurLevel->GetLayer(23)->SetName(L"HyperLoop_Neptune");
+	pCurLevel->GetLayer(24)->SetName(L"blackhole");
+	pCurLevel->GetLayer(25)->SetName(L"Sirius");
+	pCurLevel->GetLayer(26)->SetName(L"Volcanic");
+	pCurLevel->GetLayer(27)->SetName(L"Volcanic_Lava");
+	pCurLevel->GetLayer(28)->SetName(L"Nar_Shaddaa");
+	pCurLevel->GetLayer(29)->SetName(L"HL_Light");
+	pCurLevel->GetLayer(30)->SetName(L"TargetAim");
 
 	// Main Camera Object 생성
 	CGameObject* pMainCam = new CGameObject;
@@ -78,7 +91,7 @@ void CreateTestLevel()
 
 	//pMainCam->Transform()->SetRelativeRot(-XM_PI * 1.6, XM_PI * 3, 0.f);
 
-	SpawnGameObject(pMainCam, Vec3(0.f, 0.f, 0.f), 0);
+	SpawnGameObject(pMainCam, Vec3(248994.f, -1403.f, 1665336.f), 0);
 	pMainCam->Transform()->SetMainCamera(pMainCam);
 
 	// UI cameara
@@ -128,19 +141,6 @@ void CreateTestLevel()
 
 	SpawnGameObject(pLightObj, Vec3(/*-10000.*/0.f, 0.f, 0.f), 0);
 
-	//CGameObject* pObj = new CGameObject;
-	//pObj->SetName(L"Directional Light");
-	//
-	//pObj->AddComponent(new CTransform);
-	//pObj->AddComponent(new CMeshRender);
-	//
-	//pObj->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 100));
-	//pObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
-	//pObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
-
-
-	//SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), 0);
-
 	// ============
 	// 우주선 FBX
 	// ============	
@@ -157,83 +157,54 @@ void CreateTestLevel()
 		CCameraScript* CCS = pMainCam->GetScript<CCameraScript>();
 		CCS->SetTarget(Plane);
 
-		//Plane->AddComponent(new CCollider2D);
-		//Plane->Collider2D()->SetOffsetPos(Vec3(0.f, -300.f, 0.f));
-		//Plane->Collider2D()->SetOffsetScale(Vec3(1000.f,1000.f, 1000.f));
 		Plane->SetName(L"SpaceShip");
 		SpawnGameObject(Plane, Vec3(11.f, -80.f, 180.f), L"Player");
 
 		pMainCam->AddChild(Plane);
 	}
 
-	// ============
-	// 몬스터 FBX
-	// ============	
-	{
-		Ptr<CMeshData> MonsterMeshData = nullptr;
-		CGameObject* Monster = nullptr;
-	
-		MonsterMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\Enemy.fbx");
-		//HouseMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\test78678678.mdat");
-		Monster = MonsterMeshData->Instantiate();
-		Monster->AddComponent(new CMonsterScript);
-		CMonsterScript* MS = Monster->GetScript<CMonsterScript>();
-		CPlayerScript* CPS = Plane->GetScript<CPlayerScript>();
-		MS->SetPlayerScript(CPS);
-		//CPlayerScript* PS = Plane->GetScript<CPlayerScript>();
-		//PS->SetEnemy(pHouse);
-		Monster->Transform()->SetRelativeScale(Vec3(50.f, 50.f, 50.f));
-		Monster->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
-		Monster->AddComponent(new CCollider2D);
-		Monster->Collider2D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
-		Monster->Collider2D()->SetOffsetScale(Vec3(8.f, 8.f, 8.f));
-		Monster->SetName(L"Monster");
-		SpawnGameObject(Monster, Vec3(0.f, 0.f, 3000.f), L"Monster");
-		MS->begin();
-	}
+	////// ============
+	////// 몬스터 FBX
+	////// ============	
+	//{
+	//	Ptr<CMeshData> MonsterMeshData = nullptr;
+	//	CGameObject* Monster = nullptr;
+	//
+	//	MonsterMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\kkkkkkk.fbx");
+	//	//HouseMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\test78678678.mdat");
+	//	Monster = MonsterMeshData->Instantiate();
+	//	Monster->AddComponent(new CMonsterScript);
+	//	CMonsterScript* MS = Monster->GetScript<CMonsterScript>();
+	//	CPlayerScript* CPS = Plane->GetScript<CPlayerScript>();
+	//	MS->SetPlayerScript(CPS);
+	//	Monster->Transform()->SetRelativeScale(Vec3(50.f, 50.f, 50.f));
+	//	//Monster->Transform()->SetRelativeRot(Vec3(0.f, XM_PI, 0.f));
+	//	Monster->AddComponent(new CCollider2D);
+	//	Monster->Collider2D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
+	//	Monster->Collider2D()->SetOffsetScale(Vec3(8.f, 8.f, 8.f));
+	//	Monster->SetName(L"Monster");
+	//	SpawnGameObject(Monster, Vec3(0.f, 0.f, 3000.f), L"Monster");
+	//	MS->begin();
+	//}
 
-		//Ptr<CMeshData> Meteo1MeshData = nullptr;
-		//CGameObject* pMeteo1 = nullptr;
-		//Meteo1MeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\04_meteo.fbx");
-
-		////for (int i = 0; i < 10; ++i)
-		////{
-		////MeteoMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\01_meteo.mdat");
-		//	pMeteo1 = Meteo1MeshData->Instantiate();
-		//	pMeteo1->AddComponent(new MeteoScript);
-		////MeteoScript * MS = pMeteo->GetScript<MeteoScript>();
-		////MS->begin();
-		////Vec3 MeteoPosition = MS->GetSpawnPosition();
-		//	pMeteo1->Transform()->SetRelativeScale(Vec3(100.0f, 100.0f, 100.0f));
-		////pMeteo->AddComponent(new CCollider2D);
-		////pMeteo->Collider2D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
-		////pMeteo->Collider2D()->SetOffsetScale(Vec3(100.f, 100.f, 100.f));
-		//	pMeteo1->SetName(L"Meteo");
-		////SpawnGameObject(pMeteo, Vec3(MeteoPosition), L"Monster");
-		//SpawnGameObject(pMeteo1, Vec3(400, 600, 1200), L"Monster");
-		////}
-
-
-		//Ptr<CMeshData> Meteo2MeshData = nullptr;
-		//CGameObject* pMeteo2 = nullptr;
-		//Meteo2MeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\04_meteo.fbx");
-		////for (int i = 0; i < 10; ++i)
-		////{
-		//	//MeteoMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\01_meteo.mdat");
-		//	pMeteo2 = Meteo2MeshData->Instantiate();
-		//	pMeteo2->AddComponent(new MeteoScript);
-		//	//MeteoScript * MS = pMeteo->GetScript<MeteoScript>();
-		//	//MS->begin();
-		//	//Vec3 MeteoPosition = MS->GetSpawnPosition();
-		//	pMeteo2->Transform()->SetRelativeScale(Vec3(100.0f, 100.0f, 100.0f));
-		//	//pMeteo->AddComponent(new CCollider2D);
-		//	//pMeteo->Collider2D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
-		//	//pMeteo->Collider2D()->SetOffsetScale(Vec3(100.f, 100.f, 100.f));
-		//	pMeteo2->SetName(L"Meteo");
-		//	//SpawnGameObject(pMeteo, Vec3(MeteoPosition), L"Monster");
-		//	SpawnGameObject(pMeteo2, Vec3(-400, 600, 1200), L"Monster");
-		////}
-		// 
+	//// ============
+	//// Test
+	//// ============	
+	//{
+	//	CGameObject* test = new CGameObject;
+	//	test->SetName(L"test2");
+	//	test->AddComponent(new CTransform);
+	//	test->AddComponent(new CMeshRender);
+	//
+	//	test->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 100.f));
+	//
+	//	test->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
+	//	test->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"HyperLoopStateShaderMtrl"), 0);
+	//	test->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\State\\off.png"));
+	//
+	//	SpawnGameObject(test, Vec3(0.f, 0.f, 500.f), L"Player");
+	//}
+		
 	// ============
 	// SolarSystem
 	// ============	
@@ -243,7 +214,6 @@ void CreateTestLevel()
 		CGameObject* pObj = nullptr;
 
 		{	//태양
-			int i = 1;
 			CGameObject* Sun = new CGameObject;
 			Sun->SetName(L"sun");
 			Sun->AddComponent(new CTransform);
@@ -398,10 +368,11 @@ void CreateTestLevel()
 			//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\07_SaturnRing.mdat");
 			SaturnRing = pMeshData->Instantiate();
 
-			SaturnRing->AddComponent(new CPlanet_Lotating);
+			//SaturnRing->AddComponent(new CPlanet_Lotating);
+			//SaturnRing->GetScript<CPlanet_Lotating>()->SetRot(Vec3(0.f, 0.1f, 0.f));
 			SaturnRing->Transform()->SetRelativeScale(Vec3(.7f, .7f, .7f));
-			SaturnRing->GetScript<CPlanet_Lotating>()->SetRot(Vec3(0.f, 0.1f, 0.f));
-			SpawnGameObject(SaturnRing, Vec3(0.f, 0.f, 7000000.f), L"07_SaturnRing");
+			SaturnRing->Transform()->SetRelativeRot(Vec3(-0.5f, 0.f, 0.f));
+			SpawnGameObject(SaturnRing, Vec3(0.f, 0.f, 6000000.f), L"07_SaturnRing");
 		}
 
 		{	//천왕성
@@ -451,30 +422,190 @@ void CreateTestLevel()
 	// ============	
 	{
 		Ptr<CMeshData> HyperLoopMeshData = nullptr;
-
-		CGameObject* HyperLoop = new CGameObject;
 		HyperLoopMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\HyperLoop.fbx");
-		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\05_Mars.mdat");
-		HyperLoop = HyperLoopMeshData->Instantiate();
 
-		HyperLoop->AddComponent(new CPlanet_Lotating);
-		HyperLoop->AddComponent(new CCollider2D);
-		HyperLoop->AddComponent(new HyperLoopScript);
+		CGameObject* HyperLoop_Moon = new CGameObject;
+		CGameObject* HyperLoop_Mars = new CGameObject;
+		CGameObject* HyperLoop_Jupiter = new CGameObject;
+		CGameObject* HyperLoop_Saturn = new CGameObject;
+		CGameObject* HyperLoop_Uranus = new CGameObject;
+		CGameObject* HyperLoop_Neptune = new CGameObject;
 
-		HyperLoopScript* HL = HyperLoop->GetScript<HyperLoopScript>();
-		CPlayerScript* CPS = Plane->GetScript<CPlayerScript>();
-		HL->SetPlayerScript(CPS);
+		{	//달 HyperLoop
+			HyperLoop_Moon = HyperLoopMeshData->Instantiate();
+			HyperLoop_Moon->AddComponent(new CPlanet_Lotating);
+			HyperLoop_Moon->AddComponent(new CCollider2D);
+			HyperLoop_Moon->AddComponent(new HyperLoopScript);
 
-		//HyperLoop->GetScript<CPlanet_Lotating>()->SetRot(Vec3(100.f, 0.f, 0.f));
+			HyperLoopScript* HL = HyperLoop_Moon->GetScript<HyperLoopScript>();
+			CPlayerScript* CPS = Plane->GetScript<CPlayerScript>();
+			HL->SetPlayerScript(CPS);
 
-		HyperLoop->Transform()->SetRelativeScale(Vec3(10.f, 10.f, 10.f));
-		HyperLoop->Transform()->SetRelativeRot(Vec3(1.5f, 0.f, 0.f));
+			HyperLoop_Moon->GetScript<HyperLoopScript>()->SetTime(15.5f);
 
-		HyperLoop->Collider2D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
-		HyperLoop->Collider2D()->SetOffsetScale(Vec3(100.f, 100.f, 100.f));
+			HyperLoop_Moon->Transform()->SetRelativeScale(Vec3(30.f, 30.f, 30.f));
+			HyperLoop_Moon->Transform()->SetRelativeRot(Vec3(1.5f, 0.f, 0.f));
 
-		HyperLoop->SetName(L"Hyperloop");
-		SpawnGameObject(HyperLoop, Vec3(70000.f, 0.f, 2500000.f), L"Hyperloop");
+			HyperLoop_Moon->Collider2D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
+			HyperLoop_Moon->Collider2D()->SetOffsetScale(Vec3(100.f, 100.f, 100.f));
+
+			HyperLoop_Moon->SetName(L"HyperLoop_Moon");
+			SpawnGameObject(HyperLoop_Moon, Vec3(250000.f, 0.f, 1700000.f), L"HyperLoop_Moon");
+		}
+
+		{	//화성 HyperLoop
+			HyperLoop_Mars = HyperLoopMeshData->Instantiate();
+			HyperLoop_Mars->AddComponent(new CPlanet_Lotating);
+			HyperLoop_Mars->AddComponent(new CCollider2D);
+			HyperLoop_Mars->AddComponent(new HyperLoopScript_Mars);
+
+			HyperLoopScript_Mars* HL = HyperLoop_Mars->GetScript<HyperLoopScript_Mars>();
+			HyperLoopScript* HLS = HyperLoop_Moon->GetScript<HyperLoopScript>();
+			CPlayerScript* CPS = Plane->GetScript<CPlayerScript>();
+
+			HL->SetPlayerScript(CPS);
+			HL->SetHyperLoopConnet(HLS);
+
+			HyperLoop_Mars->GetScript<HyperLoopScript_Mars>()->SetTime(24.5f);
+			HyperLoop_Mars->GetScript<HyperLoopScript_Mars>()->SetSpeed(100000.f);
+
+			HyperLoop_Mars->Transform()->SetRelativeScale(Vec3(30.f, 30.f, 30.f));
+			HyperLoop_Mars->Transform()->SetRelativeRot(Vec3(1.5f, 0.f, 0.f));
+
+			HyperLoop_Mars->Collider2D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
+			HyperLoop_Mars->Collider2D()->SetOffsetScale(Vec3(100.f, 100.f, 100.f));
+
+			HyperLoop_Mars->SetName(L"HyperLoop_Mars");
+			SpawnGameObject(HyperLoop_Mars, Vec3(250000.f, 0.f, 2500000.f), L"HyperLoop_Mars");
+		}
+
+		{	//목성 HyperLoop
+			HyperLoop_Jupiter = HyperLoopMeshData->Instantiate();
+			HyperLoop_Jupiter->AddComponent(new CPlanet_Lotating);
+			HyperLoop_Jupiter->AddComponent(new CCollider2D);
+			HyperLoop_Jupiter->AddComponent(new HyperLoopScript_Jupiter);
+
+			HyperLoopScript_Jupiter* HL = HyperLoop_Jupiter->GetScript<HyperLoopScript_Jupiter>();
+			HyperLoopScript_Mars* HLSM = HyperLoop_Mars->GetScript<HyperLoopScript_Mars>();
+			CPlayerScript* CPS = Plane->GetScript<CPlayerScript>();
+
+			HL->SetPlayerScript(CPS);
+			HL->SetHyperLoopConnet(HLSM);
+
+			HyperLoop_Jupiter->GetScript<HyperLoopScript_Jupiter>()->SetTime(19.5f);
+
+			HyperLoop_Jupiter->Transform()->SetRelativeScale(Vec3(30.f, 30.f, 30.f));
+			HyperLoop_Jupiter->Transform()->SetRelativeRot(Vec3(1.5f, 0.f, 0.f));
+
+			HyperLoop_Jupiter->Collider2D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
+			HyperLoop_Jupiter->Collider2D()->SetOffsetScale(Vec3(100.f, 100.f, 100.f));
+
+			HyperLoop_Jupiter->SetName(L"HyperLoop_Jupiter");
+			SpawnGameObject(HyperLoop_Jupiter, Vec3(250000.f, 0.f, 5000000.f), L"HyperLoop_Jupiter");
+		}
+
+		{	//토성 HyperLoop		
+			HyperLoop_Saturn = HyperLoopMeshData->Instantiate();
+			HyperLoop_Saturn->AddComponent(new CPlanet_Lotating);
+			HyperLoop_Saturn->AddComponent(new CCollider2D);
+			HyperLoop_Saturn->AddComponent(new HyperLoopScript_Saturn);
+
+			HyperLoopScript_Saturn* HL = HyperLoop_Saturn->GetScript<HyperLoopScript_Saturn>();
+			HyperLoopScript_Jupiter* HLSJ = HyperLoop_Jupiter->GetScript<HyperLoopScript_Jupiter>();
+			CPlayerScript* CPS = Plane->GetScript<CPlayerScript>();
+
+			HL->SetPlayerScript(CPS);
+			HL->SetHyperLoopConnet(HLSJ);
+
+			HyperLoop_Saturn->GetScript<HyperLoopScript_Saturn>()->SetTime(19.7f);
+			HyperLoop_Saturn->GetScript<HyperLoopScript_Saturn>()->SetSpeed(100000.f);
+
+			HyperLoop_Saturn->Transform()->SetRelativeScale(Vec3(30.f, 30.f, 30.f));
+			HyperLoop_Saturn->Transform()->SetRelativeRot(Vec3(1.5f, 0.f, 0.f));
+
+			HyperLoop_Saturn->Collider2D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
+			HyperLoop_Saturn->Collider2D()->SetOffsetScale(Vec3(100.f, 100.f, 100.f));
+
+			HyperLoop_Saturn->SetName(L"HyperLoop_Saturn");
+			SpawnGameObject(HyperLoop_Saturn, Vec3(250000.f, 0.f, 6000000.f), L"HyperLoop_Saturn");
+		}
+
+		{	//천왕성 HyperLoop
+			HyperLoop_Uranus = HyperLoopMeshData->Instantiate();
+			HyperLoop_Uranus->AddComponent(new CPlanet_Lotating);
+			HyperLoop_Uranus->AddComponent(new CCollider2D);
+			HyperLoop_Uranus->AddComponent(new HyperLoopScript_Uranus);
+
+			HyperLoopScript_Uranus* HL = HyperLoop_Uranus->GetScript<HyperLoopScript_Uranus>();
+			HyperLoopScript_Saturn* HLSS = HyperLoop_Saturn->GetScript<HyperLoopScript_Saturn>();
+			CPlayerScript* CPS = Plane->GetScript<CPlayerScript>();
+
+			HL->SetPlayerScript(CPS);
+			HL->SetHyperLoopConnet(HLSS);
+
+			HyperLoop_Uranus->GetScript<HyperLoopScript_Uranus>()->SetTime(19.5f);
+
+			HyperLoop_Uranus->Transform()->SetRelativeScale(Vec3(30.f, 30.f, 30.f));
+			HyperLoop_Uranus->Transform()->SetRelativeRot(Vec3(1.5f, 0.f, 0.f));
+
+			HyperLoop_Uranus->Collider2D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
+			HyperLoop_Uranus->Collider2D()->SetOffsetScale(Vec3(100.f, 100.f, 100.f));
+
+			HyperLoop_Uranus->SetName(L"HyperLoop_Uranus");
+			SpawnGameObject(HyperLoop_Uranus, Vec3(250000.f, 0.f, 8000000.f), L"HyperLoop_Uranus");
+		}
+
+		{	//해왕성 HyperLoop
+			HyperLoop_Neptune = HyperLoopMeshData->Instantiate();
+			HyperLoop_Neptune->AddComponent(new CPlanet_Lotating);
+			HyperLoop_Neptune->AddComponent(new CCollider2D);
+			HyperLoop_Neptune->AddComponent(new HyperLoopScript_Neptune);
+
+			HyperLoopScript_Neptune* HL = HyperLoop_Neptune->GetScript<HyperLoopScript_Neptune>();
+			HyperLoopScript_Uranus* HLSU = HyperLoop_Uranus->GetScript<HyperLoopScript_Uranus>();
+			CPlayerScript* CPS = Plane->GetScript<CPlayerScript>();
+
+			HL->SetPlayerScript(CPS);
+			HL->SetHyperLoopConnet(HLSU);
+
+			HyperLoop_Neptune->GetScript<HyperLoopScript_Neptune>()->SetTime(19.5f);
+			HyperLoop_Neptune->GetScript<HyperLoopScript_Neptune>()->SetSpeed(100000.f);
+
+			HyperLoop_Neptune->Transform()->SetRelativeScale(Vec3(30.f, 30.f, 30.f));
+			HyperLoop_Neptune->Transform()->SetRelativeRot(Vec3(1.5f, 0.f, 0.f));
+
+			HyperLoop_Neptune->Collider2D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
+			HyperLoop_Neptune->Collider2D()->SetOffsetScale(Vec3(100.f, 100.f, 100.f));
+
+			HyperLoop_Neptune->SetName(L"HyperLoop_Neptune");
+			SpawnGameObject(HyperLoop_Neptune, Vec3(250000.f, 0.f, 9000000.f), L"HyperLoop_Neptune");
+		}
+
+		// ============
+		// MiniBoss
+		// ============	
+		{
+			Ptr<CMeshData> MinibossMeshData = nullptr;
+			CGameObject* MiniBoss = new CGameObject;
+			MiniBoss->SetName(L"MiniBoss");
+			pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MiniBoss.fbx");
+			MiniBoss = pMeshData->Instantiate();
+
+			MiniBoss->AddComponent(new MiniBossScript);
+			MiniBoss->AddComponent(new CCollider2D);
+
+			MiniBossScript* MBS = MiniBoss->GetScript<MiniBossScript>();
+			CPlayerScript* CPS = Plane->GetScript<CPlayerScript>();
+			HyperLoopScript_Neptune* HL = HyperLoop_Neptune->GetScript<HyperLoopScript_Neptune>();
+			MBS->SetPlayerScript(CPS);
+			MBS->SetHyperLoopConnect(HL);
+
+			MiniBoss->Collider2D()->SetOffsetPos(Vec3(-0.5f, 0.f, 3.f));
+			MiniBoss->Collider2D()->SetOffsetScale(Vec3(6.f, 6.f, 6.f));
+
+			MiniBoss->Transform()->SetRelativeScale(Vec3(350.f, 350.f, 350.f));
+			SpawnGameObject(MiniBoss, Vec3(250000.f, 0.f, 10960000.f), L"MiniBoss");
+		}
 	}
 
 	// ============
@@ -488,27 +619,17 @@ void CreateTestLevel()
 			BlackHole->SetName(L"blackhole");
 			BlackHole->AddComponent(new CTransform);
 			BlackHole->AddComponent(new CMeshRender);
-			//BlackHole->AddComponent(new CCollider2D);
 
 			BlackHole->AddComponent(new CPlanet_Lotating);
-			//BlackHole->AddComponent(new BlackholeScript);
-
-			//블랙홀 스크립트 안에 플레이어 스크립트 정보를 넣어준다.
-			//BlackholeScript* BS = BlackHole->GetScript<BlackholeScript>();
-			//CPlayerScript* CPS = Plane->GetScript<CPlayerScript>();
-			//BS->SetPlayerScript(CPS);
 
 			BlackHole->Transform()->SetRelativeScale(Vec3(10000.f, 10000.f, 10000.f));
 			BlackHole->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
-
-			//BlackHole->Collider2D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
-			//BlackHole->Collider2D()->SetOffsetScale(Vec3(1.f, 1.f, 1.f));
 
 			BlackHole->GetScript<CPlanet_Lotating>()->SetRot(Vec3(0.f, 0.1f, 0.f));
 
 			BlackHole->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
 			BlackHole->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"BlackholeMtrl"), 0);
-			SpawnGameObject(BlackHole, Vec3(0.f, 0.f, 11000000.f), L"blackhole");
+			SpawnGameObject(BlackHole, Vec3(250000.f, 0.f, 11000000.f), L"blackhole");
 		}
 
 		{	//blackhole ring
@@ -535,133 +656,19 @@ void CreateTestLevel()
 			BlackHole_Ring->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"BlackholeRingMtrl"), 0);
 			BlackHole_Ring->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\skybox\\skybox_03.jpeg"));
 
-			SpawnGameObject(BlackHole_Ring, Vec3(0.f, 0.f, 11000000.f), L"blackhole");
+			SpawnGameObject(BlackHole_Ring, Vec3(250000.f, 0.f, 11000000.f), L"blackhole");
 		}
 	}
 
-	// ============
-	// BossStage
-	// ============	
-	{
-		//{	//Sirius
-		//	CGameObject* Sirius = new CGameObject;
-		//	Sirius->SetName(L"Sirius");
-		//	Sirius->AddComponent(new CTransform);
-		//	Sirius->AddComponent(new CMeshRender);
-		//	Sirius->AddComponent(new CPlanet_Lotating);
-
-		//	Sirius->Transform()->SetRelativeScale(Vec3(200000.f, 200000.f, 200000.f));
-		//	Sirius->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
-
-		//	Sirius->GetScript<CPlanet_Lotating>()->SetRot(Vec3(0.f, 0.1f, 0.f));
-
-		//	Sirius->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
-		//	Sirius->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"SiriusMtrl"), 0);
-		//	Sirius->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\Planet\\Sirius.jpg"));
-		//	SpawnGameObject(Sirius, Vec3(0.f, 0.f, 30000000.f), L"Sirius");
-		//}
-
-		//{	//Volcanic
-		//	CGameObject* Volcanic = new CGameObject;
-		//	Volcanic->SetName(L"Volcanic");
-		//	Volcanic->AddComponent(new CTransform);
-		//	Volcanic->AddComponent(new CMeshRender);
-		//	Volcanic->AddComponent(new CPlanet_Lotating);
-
-		//	Volcanic->Transform()->SetRelativeScale(Vec3(20000.f, 20000.f, 20000.f));
-		//	Volcanic->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
-
-		//	Volcanic->GetScript<CPlanet_Lotating>()->SetRot(Vec3(0.f, 0.1f, 0.f));
-
-		//	Volcanic->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
-		//	Volcanic->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"VolcanicMtrl"), 0);
-		//	Volcanic->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\Planet\\Volcanic_01.png"));
-
-		//	SpawnGameObject(Volcanic, Vec3(50000.f, 0.f, 30500000.f), L"Volcanic");
-		//}
-
-		//{	//Volcanic_Lava
-		//	CGameObject* Volcanic_Lava = new CGameObject;
-		//	Volcanic_Lava->SetName(L"Volcanic_Lava");
-		//	Volcanic_Lava->AddComponent(new CTransform);
-		//	Volcanic_Lava->AddComponent(new CMeshRender);
-		//	Volcanic_Lava->AddComponent(new CPlanet_Lotating);
-
-		//	Volcanic_Lava->Transform()->SetRelativeScale(Vec3(20050.f, 20050.f, 20050.f));
-		//	Volcanic_Lava->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
-
-		//	Volcanic_Lava->GetScript<CPlanet_Lotating>()->SetRot(Vec3(0.f, 0.1f, 0.f));
-
-		//	Volcanic_Lava->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
-		//	Volcanic_Lava->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Volcanic_LavaMtrl"), 0);
-		//	Volcanic_Lava->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\Planet\\Volcanic\\Volcanic_Lava.png"));
-
-		//	SpawnGameObject(Volcanic_Lava, Vec3(50000.f, 0.f, 30500000.f), L"Volcanic_Lava");
-		//}
-
-		//{	//Nar_Shaddaa
-		//	CGameObject* Nar_Shaddaa = new CGameObject;
-		//	Nar_Shaddaa->SetName(L"Nar_Shaddaa");
-		//	Nar_Shaddaa->AddComponent(new CTransform);
-		//	Nar_Shaddaa->AddComponent(new CMeshRender);
-		//	Nar_Shaddaa->AddComponent(new CPlanet_Lotating);
-
-		//	Nar_Shaddaa->Transform()->SetRelativeScale(Vec3(20000.f, 20000.f, 20000.f));
-		//	Nar_Shaddaa->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
-
-		//	Nar_Shaddaa->GetScript<CPlanet_Lotating>()->SetRot(Vec3(0.f, 0.1f, 0.f));
-
-		//	Nar_Shaddaa->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
-		//	Nar_Shaddaa->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Nar_ShaddaaDMtrl"), 0);
-		//	Nar_Shaddaa->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\Planet\\Nar_Shaddaa01.png"));
-
-		//	SpawnGameObject(Nar_Shaddaa, Vec3(50000.f, 400.000f, 30450000.f), L"Nar_Shaddaa");
-		//}
-
-			//{	// PostProcess Test 
-			//	CGameObject* pPostProcess = new CGameObject;
-			//	pPostProcess->SetName(L"PostProcess");
-			//	pPostProcess->AddComponent(new CTransform);
-			//	pPostProcess->AddComponent(new CMeshRender);
-			//	pPostProcess->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-			//	pPostProcess->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"FlashMtrl"), 0);
-			//	pPostProcess->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\Flash\\Flash.png"));
-			//	SpawnGameObject(pPostProcess, Vec3(0.f, 0.f, 0.f), 0);
-			//}
-	}
-
-	// ============
-	// Meteo
-	// ============	
-	//{
-	//	Ptr<CMeshData> MeteoMeshData = nullptr;
-	//	CGameObject* pMeteo = nullptr;
-	//	MeteoMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\04_meteo.fbx");
-	//
-	//	for (int i = 0; i < 100; ++i)
-	//	{
-	//		MeteoMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\04_meteo.mdat");
-	//		pMeteo = MeteoMeshData->Instantiate();
-	//		pMeteo->Transform()->SetRelativeScale(Vec3(100.0f, 100.0f, 100.0f));
-	//		//pMeteo->AddComponent(new AsteroidbeltScript);
-	//		//pMeteo->GetScript<AsteroidbeltScript>()->tick();
-	//		//Vec3 pos = pMeteo->GetScript<AsteroidbeltScript>()->GetPosition();
-	//		//pMeteo->AddComponent(new CCollider2D);
-	//		//pMeteo->Collider2D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
-	//		//pMeteo->Collider2D()->SetOffsetScale(Vec3(100.f, 100.f, 100.f));
-	//		pMeteo->SetName(L"Meteo");
-	//		std::srand(static_cast<unsigned int>(std::time(nullptr)));
-	//
-	//		float x = std::rand() % 1000000 + 1;
-	//		float y = std::rand() % 10000 + 1;
-	//		float z = std::rand() % (3500000 - 3000000 + 1) + 3000000;
-	//		SpawnGameObject(pMeteo, Vec3(x, y, z), L"Meteo");
-	//	}
-	//}
-
 	// 충돌 시킬 레이어 짝 지정
 	CCollisionMgr::GetInst()->LayerCheck(L"Player", L"Monster");
+	CCollisionMgr::GetInst()->LayerCheck(L"Player", L"MiniBoss");
 	CCollisionMgr::GetInst()->LayerCheck(L"Player", L"blackhole");
-	CCollisionMgr::GetInst()->LayerCheck(L"Player", L"Hyperloop");
 	CCollisionMgr::GetInst()->LayerCheck(L"Player", L"TargetAim");
+	CCollisionMgr::GetInst()->LayerCheck(L"Player", L"HyperLoop_Moon");
+	CCollisionMgr::GetInst()->LayerCheck(L"Player", L"HyperLoop_Mars");
+	CCollisionMgr::GetInst()->LayerCheck(L"Player", L"HyperLoop_Jupiter");
+	CCollisionMgr::GetInst()->LayerCheck(L"Player", L"HyperLoop_Saturn");
+	CCollisionMgr::GetInst()->LayerCheck(L"Player", L"HyperLoop_Uranus");
+	CCollisionMgr::GetInst()->LayerCheck(L"Player", L"HyperLoop_Neptune");
 }

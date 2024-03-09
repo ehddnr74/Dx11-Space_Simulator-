@@ -121,8 +121,8 @@ void BlackholeScript::BeginOverlap(CCollider2D* _Other)
 			Ptr<CMeshData> BossStageMeshData = nullptr;
 			CGameObject* Boss = nullptr;
 		
-			//BossStageMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\boss_Test.fbx"); 
-			BossStageMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\boss_Test.mdat");
+			BossStageMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\boss_Test.fbx"); 
+			//BossStageMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\boss_Test.mdat");
 			Boss = BossStageMeshData->Instantiate();
 		
 			//Boss->AddComponent(new CCollider2D);

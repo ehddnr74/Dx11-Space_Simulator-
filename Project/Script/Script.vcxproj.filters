@@ -10,6 +10,9 @@
     <Filter Include="ScriptMgr">
       <UniqueIdentifier>{78d2676d-e9d6-47ca-8d90-52e8d457d264}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\HyperLoopScript">
+      <UniqueIdentifier>{1decbc76-9e9e-4ade-a6f9-8fc418ba537b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CCameraMoveScript.h">
@@ -32,12 +35,6 @@
     </ClInclude>
     <ClInclude Include="CScriptMgr.h">
       <Filter>ScriptMgr</Filter>
-    </ClInclude>
-    <ClInclude Include="CGravityScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
-    <ClInclude Include="CTestScript.h">
-      <Filter>Script</Filter>
     </ClInclude>
     <ClInclude Include="CCameraScript.h">
       <Filter>Script</Filter>
@@ -63,9 +60,6 @@
     <ClInclude Include="BossScript.h">
       <Filter>Script</Filter>
     </ClInclude>
-    <ClInclude Include="HyperLoopScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
     <ClInclude Include="HitPostScript.h">
       <Filter>Script</Filter>
     </ClInclude>
@@ -78,14 +72,38 @@
     <ClInclude Include="BossPlanets.h">
       <Filter>Script</Filter>
     </ClInclude>
-    <ClInclude Include="DebugScript.h" />
-    <ClInclude Include="AsteroidbeltScript.h" />
     <ClInclude Include="BossEmptyScript.h">
       <Filter>Script</Filter>
     </ClInclude>
     <ClInclude Include="BulletParticleScript.h">
       <Filter>Script</Filter>
     </ClInclude>
+    <ClInclude Include="AsteroidbeltScript.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugScript.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLoopScript.h">
+      <Filter>Script\HyperLoopScript</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLoopScript_Jupiter.h">
+      <Filter>Script\HyperLoopScript</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLoopScript_Mars.h">
+      <Filter>Script\HyperLoopScript</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLoopScript_Neptune.h">
+      <Filter>Script\HyperLoopScript</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLoopScript_Saturn.h">
+      <Filter>Script\HyperLoopScript</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLoopScript_Uranus.h">
+      <Filter>Script\HyperLoopScript</Filter>
+    </ClInclude>
+    <ClInclude Include="MiniBossScript.h" />
+    <ClInclude Include="MiniBossBulletScript.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CCameraMoveScript.cpp">
@@ -108,12 +126,6 @@
     </ClCompile>
     <ClCompile Include="CScriptMgr.cpp">
       <Filter>ScriptMgr</Filter>
-    </ClCompile>
-    <ClCompile Include="CGravityScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
-    <ClCompile Include="CTestScript.cpp">
-      <Filter>Script</Filter>
     </ClCompile>
     <ClCompile Include="CCameraScript.cpp">
       <Filter>Script</Filter>
@@ -139,9 +151,6 @@
     <ClCompile Include="BossScript.cpp">
       <Filter>Script</Filter>
     </ClCompile>
-    <ClCompile Include="HyperLoopScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
     <ClCompile Include="HitPostScript.cpp">
       <Filter>Script</Filter>
     </ClCompile>
@@ -154,13 +163,37 @@
     <ClCompile Include="BossPlanets.cpp">
       <Filter>Script</Filter>
     </ClCompile>
-    <ClCompile Include="DebugScript.cpp" />
-    <ClCompile Include="AsteroidbeltScript.cpp" />
     <ClCompile Include="BossEmptyScript.cpp">
       <Filter>Script</Filter>
     </ClCompile>
     <ClCompile Include="BulletParticleScript.cpp">
       <Filter>Script</Filter>
     </ClCompile>
+    <ClCompile Include="AsteroidbeltScript.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugScript.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="HyperLoopScript.cpp">
+      <Filter>Script\HyperLoopScript</Filter>
+    </ClCompile>
+    <ClCompile Include="HyperLoopScript_Jupiter.cpp">
+      <Filter>Script\HyperLoopScript</Filter>
+    </ClCompile>
+    <ClCompile Include="HyperLoopScript_Mars.cpp">
+      <Filter>Script\HyperLoopScript</Filter>
+    </ClCompile>
+    <ClCompile Include="HyperLoopScript_Neptune.cpp">
+      <Filter>Script\HyperLoopScript</Filter>
+    </ClCompile>
+    <ClCompile Include="HyperLoopScript_Saturn.cpp">
+      <Filter>Script\HyperLoopScript</Filter>
+    </ClCompile>
+    <ClCompile Include="HyperLoopScript_Uranus.cpp">
+      <Filter>Script\HyperLoopScript</Filter>
+    </ClCompile>
+    <ClCompile Include="MiniBossScript.cpp" />
+    <ClCompile Include="MiniBossBulletScript.cpp" />
   </ItemGroup>
 </Project>

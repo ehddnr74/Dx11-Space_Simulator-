@@ -83,22 +83,22 @@ void CCameraMoveScript::Camera3DMove()
 	if (KEY_PRESSED(KEY::LSHIFT))
 		fSpeed *= 5.f;
 
-	if (KEY_PRESSED(KEY::W))
+	if (KEY_PRESSED(KEY::UP))
 	{
 		vPos += DT * vFront * fSpeed;
 	}
 
-	if (KEY_PRESSED(KEY::S))
+	if (KEY_PRESSED(KEY::DOWN))
 	{
 		vPos -= DT * vFront * fSpeed;
 	}
 
-	if (KEY_PRESSED(KEY::A))
+	if (KEY_PRESSED(KEY::LEFT))
 	{
 		vPos -= DT * vRight * fSpeed;
 	}
 
-	if (KEY_PRESSED(KEY::D))
+	if (KEY_PRESSED(KEY::RIGHT))
 	{
 		vPos += DT * vRight * fSpeed;
 	}

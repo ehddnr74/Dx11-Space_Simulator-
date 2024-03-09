@@ -97,7 +97,7 @@ void CCameraScript::Camera3DMove()
 	Vec3 TarGetPos = m_Target->Transform()->GetRelativePos();
 
 
-	if (KEY_PRESSED(KEY::W))
+	if (KEY_PRESSED(KEY::UP))
 	{
 		vRot.x -= DT * 0.7f;
 		//vPos += DT * vUp * fSpeed;
@@ -108,7 +108,7 @@ void CCameraScript::Camera3DMove()
 		}
 	}
 
-	if (KEY_PRESSED(KEY::S))
+	if (KEY_PRESSED(KEY::DOWN))
 	{
 		vRot.x += DT * 0.7f;
 		//vPos -= DT * vUp * fSpeed;
@@ -119,7 +119,7 @@ void CCameraScript::Camera3DMove()
 		}
 	}
 
-	if (KEY_PRESSED(KEY::A))
+	if (KEY_PRESSED(KEY::LEFT))
 	{
 		vRot.y -= DT * 1.0f;
 		//vPos -= DT * vRight * fSpeed;
@@ -130,7 +130,7 @@ void CCameraScript::Camera3DMove()
 		}
 	}
 
-	if (KEY_PRESSED(KEY::D))
+	if (KEY_PRESSED(KEY::RIGHT))
 	{
 		vRot.y += DT * 1.0f;
 		//vPos += DT * vRight * fSpeed;
@@ -143,7 +143,7 @@ void CCameraScript::Camera3DMove()
 	}
 
 
-	if (KEY_PRESSED(KEY::LSHIFT))
+	if (KEY_PRESSED(KEY::SPACE))
 	{
 		vPos += DT * vFront * fSpeed;
 	}

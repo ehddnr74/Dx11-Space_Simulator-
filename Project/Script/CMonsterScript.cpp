@@ -8,7 +8,7 @@
 
 CMonsterScript::CMonsterScript()
 	: CScript((UINT)SCRIPT_TYPE::MONSTERSCRIPT)
-	, HP(100)
+	, HP(10)
 	, RandomPos(1)
 	, MoveTime(0.f)
 	, Bulletbool(false)
@@ -38,8 +38,8 @@ void CMonsterScript::tick()
 {
 	if (HP <= 0) // 추후 폭발 애니메이션 추가 // 셰이더 맞으면 빨갛게 하이라이트 
 	{
+		DeathState = true;
 		DestroyObject(GetOwner());
-
 		if (Debug != nullptr)
 		{
 			DestroyObject(Debug);
@@ -54,8 +54,8 @@ void CMonsterScript::tick()
 
 	Vec3 CameraPos = CameraScript->GetOwner()->Transform()->GetRelativePos();
 	Vec3 CameraRot = CameraScript->GetOwner()->Transform()->GetRelativeRot();
-	Transform()->SetRelativeRot(CameraRot);
-
+	//CameraRot.y += XM_PI;
+	Transform()->SetRelativeRot(Vec3(CameraRot.x, -CameraRot.y, -CameraRot.z));
 
 	if (abs(MonsterPos.z - CameraPos.z) <= abs(CameraFront.z * 1000))
 	{
@@ -117,7 +117,6 @@ void CMonsterScript::tick()
 	//		BulletPos -= BulletDir * DT * 300.f;
 	//		Bullet->Transform()->SetRelativePos(BulletPos);
 	//	}
-
 }
 
 void CMonsterScript::BeginOverlap(CCollider2D* _Other)

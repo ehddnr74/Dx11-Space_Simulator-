@@ -21,6 +21,7 @@ private:
     bool Check = false;
 
     bool test = true;
+    bool DeathState;
 
 public:
     virtual void begin() override;
@@ -39,6 +40,7 @@ public:
 
     CPlayerScript* GetPlayerScript() { return PlayerScript; }
     bool GetCheck() { return Check; }
+    bool GetDeath() { return DeathState; }
 
     CLONE(CMonsterScript);
 public:

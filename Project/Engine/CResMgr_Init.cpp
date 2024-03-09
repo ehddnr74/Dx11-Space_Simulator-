@@ -1134,6 +1134,30 @@ void CResMgr::CreateDefaultGraphicsShader()
 	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_MASK);
 
 	AddRes(pShader->GetKey(), pShader);
+
+	// ============================
+	// HyperLoopStateShader
+	// RS_TYPE : CULL_BACK
+	// DS_TYPE : LESS
+	// BS_TYPE : DEFAULT
+	// Domain : MASK
+	// ============================
+	pShader = new CGraphicsShader;
+	pShader->SetKey(L"HyperLoopStateShader");
+
+	pShader->CreateVertexShader(L"shader\\std3d.fx", "VS_Std3D");
+	pShader->CreatePixelShader(L"shader\\std3d.fx", "PS_Std3D");
+
+	pShader->SetRSType(RS_TYPE::CULL_BACK);
+	pShader->SetDSType(DS_TYPE::LESS);
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_MASK);
+
+	// Parameter	
+	pShader->AddScalarParam(FLOAT_0, "Spec Coeff");
+	pShader->AddTexParam(TEX_0, "Output Texture");
+	pShader->AddTexParam(TEX_1, "Normal Texture");
+
+	AddRes(pShader->GetKey(), pShader);
 }
 
 void CResMgr::CreateDefaultComputeShader()
@@ -1367,4 +1391,34 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"FlashShader"));
 	AddRes(L"FlashMtrl", pMtrl);
+
+	// HyperLoopStateMtrl_Moon
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"HyperLoopStateShader"));
+	AddRes(L"HyperLoopStateShaderMtrl_Moon", pMtrl);
+
+	// HyperLoopStateMtrl_Mars
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"HyperLoopStateShader"));
+	AddRes(L"HyperLoopStateShaderMtrl_Mars", pMtrl);
+
+	// HyperLoopStateMtrl_Jupiter
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"HyperLoopStateShader"));
+	AddRes(L"HyperLoopStateShaderMtrl_Jupiter", pMtrl);
+
+	// HyperLoopStateMtrl_Saturn
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"HyperLoopStateShader"));
+	AddRes(L"HyperLoopStateShaderMtrl_Saturn", pMtrl);
+
+	// HyperLoopStateMtrl_Uranus
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"HyperLoopStateShader"));
+	AddRes(L"HyperLoopStateShaderMtrl_Uranus", pMtrl);
+
+	// HyperLoopStateMtrl_Neptune
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"HyperLoopStateShader"));
+	AddRes(L"HyperLoopStateMtrl_Neptune", pMtrl);
 }
