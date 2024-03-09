@@ -12,9 +12,24 @@ private:
     bool        _Fading;
 
 
-    //bool SetOff;
+    // Ä«¸Þ¶ó Shake
+    double ShakingTime = 0.f;
+    bool Shaking = false;
+    float m_force = 0.05f;
 
-    //CPlayerScript* PlayerScript;
+    float rangeX = 0.f;
+    float rangeY = 0.f;
+    float rangeZ = 0.f;
+
+    Vec3 m_OriginRot = Vec3(0.f, 0.f, 0.f);
+    bool RandomRangeCheck = false;
+    bool OriginRotCheck = false;
+    bool ToOriginRot = false;
+
+    void CameraShake(double ShakeTime);
+    void RandomRange();
+
+
     Vec3 vFront;
     Vec3 vUp;
     Vec3 vRight;
@@ -26,7 +41,6 @@ private:
     CGameObject* HitPostProcess;
     CGameObject* SkyBox;
 
-   
 
 public:
     virtual void begin() override;
@@ -47,6 +61,12 @@ public:
     CGameObject* GetSkyBox() { return SkyBox; }
 
     CGameObject* GetPlayerEmpty() { return Empty; }
+
+    float GetForce() { return m_force; }
+    void SetForce(float force) { m_force = force; }
+
+    bool GetToOriginRot() { return ToOriginRot; }
+    void SetToOriginRot(bool TOR) { ToOriginRot = TOR; }
 private:
     void Camera3DMove();
 

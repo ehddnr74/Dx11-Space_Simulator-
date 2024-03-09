@@ -1,14 +1,15 @@
 #include "pch.h"
 #include "CCameraScript.h"
-
 #include <Engine\CTransform.h>
 #include <Engine\CCamera.h>
-
 #include "CPlayerScript.h"
-
 #include "HitPostScript.h"
 #include "Fading.h"
 #include "BossEmptyScript.h"
+#include<random>
+
+std::mt19937_64 rng(0);
+std::uniform_real_distribution<> dist(-10, 10);
 
 CCameraScript::CCameraScript()
 	: CScript((UINT)SCRIPT_TYPE::CAMERASCRIPT)
@@ -183,6 +184,7 @@ void CCameraScript::Camera3DMove()
 
 	if (HitPost)
 	{
+		Shaking = true;
 		HitPost = false;
 		HitPostProcess = new CGameObject;
 		HitPostProcess->SetName(L"HitPost");
@@ -196,5 +198,48 @@ void CCameraScript::Camera3DMove()
 		SpawnGameObject(HitPostProcess, Vec3(0.f, 0.f, 0.f), 0);
 	}
 
+	if (Shaking)
+		CameraShake(1.f);
+}
 
+void CCameraScript::CameraShake(double ShakeTime)
+{
+	if (OriginRotCheck == false) // 처음의 카메라 회전값 저장
+	{
+		OriginRotCheck = true;
+		m_OriginRot = Transform()->GetRelativeRot();
+	}
+
+	//if (RandomRangeCheck == false) // 랜덤값 구하기 
+	//{
+		//RandomRangeCheck = true;
+	RandomRange();
+	//Vec3 TargetRot = m_OriginRot + Vec3(rangeX, rangeY, rangeZ); // 목표회전값
+//}
+
+	ShakingTime += DT;
+
+	Vec3 CameraRot = Transform()->GetRelativeRot(); // 카메라 현재 회전상태
+	CameraRot.x += rangeX * DT * m_force;
+	CameraRot.y += rangeY * DT * m_force;
+	CameraRot.z += rangeZ * DT * m_force;
+	Transform()->SetRelativeRot(CameraRot);
+
+	if (ShakingTime >= ShakeTime)
+	{
+		OriginRotCheck = false;
+		ShakingTime = 0.f;
+		Shaking = false;
+
+		if (ToOriginRot)
+			Transform()->SetRelativeRot(m_OriginRot); // 회전값을 기존으로 되돌림 True or Flase 선택 가능
+	}
+}
+
+
+void CCameraScript::RandomRange()
+{
+	rangeX = dist(rng);
+	rangeY = dist(rng);
+	rangeZ = dist(rng);
 }
